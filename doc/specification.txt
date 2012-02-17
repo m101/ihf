@@ -8,9 +8,22 @@ Its goal would be to permit us to have an interactive shell.
 
 2 - Features
 
-- Client:
+- Client (cli)
     - polling results
-- Server
+- Server (srv)
     - pipe
 
+-------     ----------------------
+| cli | <-> |  -------    Tomcat |
+-------     |  | srv |           |
+            |  -------           |
+            |  /\    fifo        |
+            |   |     |          |
+            |   |     |          |
+            |  fifo   \/         |
+            | -----------        |
+            | | spawned |        |
+            | | process |        |
+            | -----------        |
+            ----------------------
 
