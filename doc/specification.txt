@@ -1,5 +1,7 @@
 Specifications for IHF: I Hate Firewalls
 
+http://www.jspipes.com/
+
 1 - Introduction
 
 IHF (I Hate Firewalls) is a project created in order to bypass very restrictive
@@ -12,6 +14,31 @@ Its goal would be to permit us to have an interactive shell.
     - polling results
 - Server (srv)
     - pipe
+
+3 - Architecture
+
+(1) deamonized
+
+-------     ----------------------
+| cli | <-> |  -------    Tomcat |
+-------     |  | srv |           |
+            |  -------           |
+            |  /\    fifo        |
+            |   |     |          |
+            |  fifo   \/         |
+            | -----------        |
+            | | deamon  |        |
+            | -----------        |
+            |  /\    fifo        |
+            |   |     |          |
+            |  fifo   \/         |
+            | -----------        |
+            | | spawned |        |
+            | | process |        |
+            | -----------        |
+            ----------------------
+
+(2) fifo only
 
 -------     ----------------------
 | cli | <-> |  -------    Tomcat |
@@ -27,3 +54,24 @@ Its goal would be to permit us to have an interactive shell.
             | -----------        |
             ----------------------
 
+(3) fifo only with C program
+
+-------     ----------------------
+| cli | <-> |  -------    Tomcat |
+-------     |  | srv |           |
+            |  -------           |
+            |    /\              |
+            |    |  pipe         |
+            |    |               |
+            | -----------        |
+            | | C code  |        |
+            | -----------        |
+            |  /\    fifo        |
+            |   |     |          |
+            |   |     |          |
+            |  fifo   \/         |
+            | -----------        |
+            | | spawned |        |
+            | | process |        |
+            | -----------        |
+            ----------------------
