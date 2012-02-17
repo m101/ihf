@@ -1,0 +1,16 @@
+Specifications for IHF: I Hate Firewalls
+
+1 - Introduction
+
+IHF (I Hate Firewalls) is a project created in order to bypass very restrictive
+firewalls that has only port 80 that is activated for instance.
+Its goal would be to permit us to have an interactive shell.
+
+2 - Features
+
+- Client:
+    - polling results
+- Server
+    - pipe
+
+
