@@ -21,3 +21,34 @@ Types
     DATA|ERR
   WRITE : Data
     ACK|ERR
+
+
+= Sessions
+
+General Session
+CLIENT                  SERVER
+            INIT
+        |   --->    |   FIFOs Creation
+        |   OK      |
+        |   <---    |
+        |           |
+        |   ...     |   CMD sent to the server
+        |           |
+        |   KILL    |
+        |   --->    |   Destroy FIFOs
+
+Executing a COMMAND:
+CLIENT                  SERVER
+        |   EXEC    |   Write of raw data in input FIFO
+        |   --->    |   Spawn child process
+        |           |       -> Spawn CMD
+
+Getting results back
+CLIENT                  SERVER
+            READ
+        |   --->    |   Read output FIFO
+        |           |
+        |           |
+        |           |
+        |   DATA    |   Sent read data back to the client
+        |   <---    |   Spawn child process
