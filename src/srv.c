@@ -13,6 +13,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#define FIFO_OUTPUT "/tmp/output"
+#define FIFO_INPUT  "/tmp/input"
+
 // cmd structure
 struct cmd_s {
     //
@@ -38,15 +41,15 @@ int main (int argc, char *argv[]) {
     // return code for each func
     int retcode;
 
-    //
-    retcode = mkfifo("/tmp/input", O_RDONLY);
+    // input pipe
+    retcode = mkfifo(FIFO_INPUT, O_RDONLY);
     if (retcode < 0) {
         fprintf(stderr, "error: main(): Couldn't create pipe file\n");
         exit(1);
     }
 
-    //
-    retcode = mkfifo("/tmp/output", O_WRONLY);
+    // output pipe
+    retcode = mkfifo(FIFO_OUTPUT, O_WRONLY);
     if (retcode < 0) {
         fprintf(stderr, "error: main(): Couldn't create pipe file\n");
         exit(1);
