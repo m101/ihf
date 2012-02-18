@@ -36,7 +36,20 @@ int cmd_exec (struct ihf_pkt_s *pkt) {
 }
 
 // get result
-int cmd_pull (struct cmd_s *cmd, void *data) {
+int cmd_pull (struct ihf_pkt_s *pkt) {
+    char **argv;
+    FILE *fp;
+
+    if (!pkt)
+        return -1;
+
+    fp = open(FIFO_OUTPUT, "r");
+    if (!fp)
+        return -1;
+
+    // TODO: network send of data
+
+    return 0;
 }
 
 //
