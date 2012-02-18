@@ -19,7 +19,7 @@
 #define FIFO_INPUT  "/tmp/input"
 
 // exec command
-int cmd_exec (struct ihf_pkt_s *pkt) {
+int cmd_exec (struct ihf_msg_s *pkt) {
     char **argv;
 
     // check args
@@ -38,7 +38,7 @@ int cmd_exec (struct ihf_pkt_s *pkt) {
 }
 
 // get result
-int cmd_read (struct ihf_pkt_s *pkt) {
+int cmd_read (struct ihf_msg_s *pkt) {
     int retcode;
     int c;
     char **argv;
@@ -60,7 +60,7 @@ int cmd_read (struct ihf_pkt_s *pkt) {
 }
 
 // send data to input
-int cmd_write (struct ihf_pkt_s *pkt) {
+int cmd_write (struct ihf_msg_s *pkt) {
     int retcode;
     int c;
     char **argv;
