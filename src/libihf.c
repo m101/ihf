@@ -85,34 +85,46 @@ struct ihf_msg *msg_unpack(uint8_t *data, int datalen) {
     return msg;
 }
 
-char **explode (char *str, int len, char *delim, int *nTokens) {
+char **explode (char *str, int len_str, char *delim, int *n_tokens) {
     char *token, *saveptr;
-    char *exploded;
+    char *to_explode;
+    char **exploded;
     int idx_str, idx_delim;
-    int len_str, len_delim;
+    int len_delim;
+    int c_tokens;
 
-    if (!str || len <= 0 || !delim || !nTokens)
+    if (!str || len_str <= 0 || !delim || !n_tokens)
         return NULL;
 
-    exploded = calloc(len, sizeof(*exploded));
-    if (!exploded)
+    to_explode = calloc(len_str, sizeof(*to_explode));
+    if (!to_explode)
         return NULL;
-    memcpy(exploded, str, len);
+    memcpy(to_explode, str, len_str);
 
-    *nTokens = 0;
+    // count n_tokens
     len_delim = strlen(delim);
-    token = strtok_r(exploded, delim, &saveptr);
-    while (token) {
-        len_str = strlen(exploded);
-        for (idx_str = 0; idx_str < len_str; idx_str++) {
-            // for each delim -> the byte is put to 0
-            for (idx_delim = 0; idx_delim < len_delim; idx_delim++) {
-                if (exploded[idx_str] == delim[idx_delim]) {
-                    exploded[idx_str] = '\0';
-                    (*nTokens)++;
-                }
-            }
+    c_tokens = 1;
+    for (idx_str = 0; idx_str < len_str; idx_str++) {
+        for (idx_delim = 0; idx_delim < len_delim; idx_delim++) {
+            if (str[idx_str] == delim[idx_delim])
+                c_tokens++;
         }
+    }
+
+    // copy str (strdup() does not seem to be reliable)
+    exploded = calloc(c_tokens, sizeof(*exploded));
+    if (!to_explode) {
+        free(to_explode);
+        return NULL;
+    }
+    memcpy(to_explode, str, len_str);
+
+    // sep tokens
+    *n_tokens = 0;
+    token = strtok_r(to_explode, delim, &saveptr);
+    while (token) {
+        exploded[*n_tokens] = token;
+        (*n_tokens)++;
         token = strtok_r(NULL, delim, &saveptr);
     }
 

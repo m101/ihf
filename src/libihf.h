@@ -30,7 +30,7 @@ enum {
 uint8_t        *msg_pack(int, uint8_t *, int);
 struct ihf_msg *msg_unpack(uint8_t *, int);
 
-char **explode (char *str, int len, char *delim, int *nTokens);
+char **explode (char *, int, char *, int *);
 
 int readall(int, char **, int);
 
