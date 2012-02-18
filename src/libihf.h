@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define BUFMAX 1024 * 10
+
 #define IHF_FIXLEN  4
 #define IHF_VERSION 1
 
@@ -25,9 +27,11 @@ enum {
 };
 #define MSG_TYPE_MAX 8
 
-uint8_t          *msg_pack(int, uint8_t *, int);
+uint8_t        *msg_pack(int, uint8_t *, int);
 struct ihf_msg *msg_unpack(uint8_t *, int);
 
 char **explode (char *str, int len, char *delim);
+
+int readall(int, char **, int);
 
 #endif /* _LIBIHF_H_ */
