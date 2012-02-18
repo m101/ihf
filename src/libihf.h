@@ -22,7 +22,7 @@ enum {
     MSG_TYPE_DATA = 5
 };
 
-uint8_t          *msg_pack(int, char *);
+uint8_t          *msg_pack(int, char *, int);
 struct ihf_msg_s *msg_unpack(uint8_t *, int);
 
 char **explode (char *str, int len, char *delim);
