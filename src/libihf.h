@@ -19,7 +19,9 @@ enum {
     MSG_TYPE_EXEC = 2,
     MSG_TYPE_READ = 3,
     MSG_TYPE_WRITE = 4,
-    MSG_TYPE_DATA = 5
+    MSG_TYPE_DATA = 5,
+    MSG_TYPE_OK = 6,
+    MSG_TYPE_ERR = 7
 };
 
 uint8_t          *msg_pack(int, char *, int);
