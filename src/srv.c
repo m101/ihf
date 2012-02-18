@@ -17,7 +17,6 @@
 
 int cmd_init(void) {
     int fifo_input, fifo_output;
-    int retcode;
     struct stat buf;
 
     if (stat(FIFO_INPUT, &buf) == 0)
@@ -31,14 +30,18 @@ int cmd_init(void) {
         fprintf(stderr, "error: main(): Couldn't open(r|w) pipe file\n");
         exit(1);
     }
+
+    return 0;
 }
 
 int cmd_kill(void) {
     unlink(FIFO_INPUT);
     unlink(FIFO_OUTPUT);
+
+    return 0;
 }
 
-int cmd_exec(char *cmd, int cmd_len) {
+int cmd_exec(uint8_t *cmd, int cmd_len) {
     char **argv;
     int argc;
 
@@ -50,44 +53,42 @@ int cmd_exec(char *cmd, int cmd_len) {
         return -1;
 
     execv(argv[0], argv);
-}
-
-int cmd_read(void) {
-    int retcode;
-    int c;
-    char **argv;
-    FILE *fp;
-
-    fp = open(FIFO_OUTPUT, "r");
-    if (!fp)
-        return -1;
-
-    while (fread(&c, 1, 1, fp) > 0)
-        write(STDOUT_FILENO, &c, 1);
-
-    fclose(fp);
 
     return 0;
 }
 
-int cmd_write(char *data, int data_len) {
-    int retcode;
+int cmd_read(void) {
     int c;
-    char **argv;
-    FILE *fp;
+    int fd;
+
+    fd = open(FIFO_OUTPUT, O_RDONLY);
+    if (fd <= 0)
+        return -1;
+
+    while (read(fd, &c, 1) > 0)
+        write(STDOUT_FILENO, &c, 1);
+
+    close(fd);
+
+    return 0;
+}
+
+int cmd_write(uint8_t *data, int data_len) {
+    int c;
+    int fd;
 
     if (!data)
         return -1;
 
     /* XXX use data_len */
-    fp = open(FIFO_INPUT, "w");
-    if (!fp)
+    fd = open(FIFO_INPUT, O_WRONLY);
+    if (fd <= 0)
         return -1;
 
     while (read(STDIN_FILENO, &c, 1) > 0)
-        fwrite(&c, 1, 1, fp);
+        write(fd, &c, 1);
 
-    fclose(fp);
+    close(fd);
 
     return 0;
 }

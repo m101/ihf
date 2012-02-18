@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include <unistd.h>
+
 #include "libihf.h"
 
 #define OPTION_HELP     1
@@ -50,7 +54,6 @@ int main(int argc, char *argv[]) {
 
 #define TEST_STR    "hahaha toto tata titi\n"
     char *toxplod = strdup(TEST_STR);
-    int lentoxplod = strlen(TEST_STR);
     int nExploded;
     char **exploded = explode(toxplod, strlen(toxplod), " ", &nExploded);
     int idx_exploded;
