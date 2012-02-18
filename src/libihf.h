@@ -21,5 +21,7 @@ enum {
 
 uint8_t          *msg_pack(int type, char *arg);
 struct ihf_pkt_s *msg_unpack(uint8_t *);
+// explode func
+char **explode (char *str, int len, char *delim);
 
 #endif /* _LIBIHF_H_ */

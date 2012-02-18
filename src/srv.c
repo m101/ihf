@@ -16,15 +16,23 @@
 #define FIFO_OUTPUT "/tmp/output"
 #define FIFO_INPUT  "/tmp/input"
 
-// cmd structure
-struct cmd_s {
-    //
-    char *arg;
-    int len;
-};
-
 // exec command
-int cmd_exec (struct cmd_s *cmd, void *data) {
+int cmd_exec (struct ihf_pkt_s *pkt) {
+    char **argv;
+
+    // check args
+    if (!pkt)
+        return -1;
+
+    // parse packet
+    if (pkt->argn)
+        return -1;
+    argv = exploded(pkt->argn, strlen(pkt->argn), " ");
+    if (!argv)
+        return -1;
+
+    // exec cmd
+    execv(argv[0], argv);
 }
 
 // get result
@@ -33,25 +41,24 @@ int cmd_pull (struct cmd_s *cmd, void *data) {
 
 //
 int main (int argc, char *argv[]) {
-    // socket
-    int sockfd;
-
+    // fifo
+    int fifo_input, fifo_output;
     // process
     pid_t pid;
     // return code for each func
     int retcode;
 
     // input pipe
-    retcode = mkfifo(FIFO_INPUT, O_RDONLY);
-    if (retcode < 0) {
-        fprintf(stderr, "error: main(): Couldn't create pipe file\n");
+    fifo_input = open(FIFO_INTPUT, O_RDONLY);
+    if (fifo_input < 0) {
+        fprintf(stderr, "error: main(): Couldn't open(r) pipe file\n");
         exit(1);
     }
 
     // output pipe
-    retcode = mkfifo(FIFO_OUTPUT, O_WRONLY);
+    fifo_output = open(FIFO_OUTPUT, O_WRONLY);
     if (retcode < 0) {
-        fprintf(stderr, "error: main(): Couldn't create pipe file\n");
+        fprintf(stderr, "error: main(): Couldn't open(w) pipe file\n");
         exit(1);
     }
 
