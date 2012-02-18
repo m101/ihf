@@ -4,10 +4,10 @@
 #include <stdint.h>
 
 struct ihf_pkt_s {
-    uint8_t version:
-    uint8_t type:
-    uint16_t length:
-    uint8_t *argn:
+    uint8_t version;
+    uint8_t type;
+    uint16_t length;
+    uint8_t *arg;
 };
 
 enum {
@@ -19,7 +19,7 @@ enum {
     PKT_TYPE_DATA = 5
 };
 
-uint8_t          *msg_pack(int type, char *arg);
+uint8_t          *msg_pack(int, char *);
 struct ihf_pkt_s *msg_unpack(uint8_t *);
 // explode func
 char **explode (char *str, int len, char *delim);
