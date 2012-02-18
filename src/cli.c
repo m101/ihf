@@ -48,8 +48,6 @@ int validate_port(char *port) {
         return 0;
     snprintf(integer, 10, "%ld", p);
 
-    printf("%s passed first test\n", port);
-
     if (strcmp(port, integer))
         return 0;
     else
@@ -90,12 +88,12 @@ int main(int argc, char *argv[]) {
 
     for (idx_arg = 0; idx_arg < argc; idx_arg++) {
         if (validate_ip(argv[idx_arg]))
-            printf("%s is an ip/host address\n", argv[idx_arg]);
+            printf("%s is an ip address\n", argv[idx_arg]);
         else {
             if (validate_port(argv[idx_arg]))
                 printf("%s is a port\n", argv[idx_arg]);
             else
-                printf("%s is not an ip/host address or port\n", argv[idx_arg]);
+                printf("%s is not an ip address or port\n", argv[idx_arg]);
         }
     }
 
