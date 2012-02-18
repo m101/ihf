@@ -38,7 +38,8 @@ int cmd_exec (struct ihf_pkt_s *pkt) {
 }
 
 // get result
-int cmd_pull (struct ihf_pkt_s *pkt) {
+int cmd_read (struct ihf_pkt_s *pkt) {
+    int retcode;
     char **argv;
     FILE *fp;
 
@@ -49,7 +50,31 @@ int cmd_pull (struct ihf_pkt_s *pkt) {
     if (!fp)
         return -1;
 
-    // TODO: network send of data
+    while (fread(&c, 1, 1, fp) > 0)
+        write(STDOUT_FILENO, &c, 1);
+
+    fclose(fp);
+
+    return 0;
+}
+
+// send data to input
+int cmd_write (struct ihf_pkt_s *pkt) {
+    int retcode;
+    char **argv;
+    FILE *fp;
+
+    if (!pkt)
+        return -1;
+
+    fp = open(FIFO_INPUT, "w");
+    if (!fp)
+        return -1;
+
+    while (read(STDIN_FILENO, &c, 1) > 0)
+        fwrite(&c, 1, 1, fp);
+
+    fclose(fp);
 
     return 0;
 }
