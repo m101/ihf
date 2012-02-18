@@ -1,3 +1,4 @@
+TARGET_SERVER = srv
 CFLAGS 	=	-g -Wall
 LDFLAGS	=
 
@@ -8,7 +9,7 @@ cli:
 %.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(LDFLAGS)
 
-srv: srv.o libihf.o
+$(TARGET_SERVER): srv.o libihf.o
 	$(CC) srv.o libihf.o -o srv $(LDFLAGS) $(CFLAGS)
 
 .PHONY: clean mrproper
@@ -16,5 +17,5 @@ srv: srv.o libihf.o
 mrproper: clean
 
 clean:
-	rm -f $(PROG) *~ *.o
+	rm -f $(TARGET_SERVER) *~ *.o
 
