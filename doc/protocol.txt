@@ -1,0 +1,23 @@
+The same protocol is used for requests and responses.
+
+Version
+  1 byte
+Type
+  2 bytes
+Lenght
+  2 bytes
+Data
+  N bytes
+
+Types
+  INIT
+    ACK|ERR
+    No arguments
+  KILL : No arguments
+    ACK|ERR
+  EXEC : String like in a command line
+    ACK+PID|ERR
+  READ : No arguments
+    DATA|ERR
+  WRITE : Data
+    ACK|ERR

@@ -1,0 +1,7 @@
+Coding norm
+
+- 4 spaces
+- all in lower caps
+- no typedef for complex types
+    -> typedefs just for scalar types
+
