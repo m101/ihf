@@ -23,8 +23,9 @@ enum {
     MSG_TYPE_OK = 6,
     MSG_TYPE_ERR = 7
 };
+#define MSG_TYPE_MAX 8
 
-uint8_t          *msg_pack(int, char *, int);
+uint8_t          *msg_pack(int, uint8_t *, int);
 struct ihf_msg *msg_unpack(uint8_t *, int);
 
 char **explode (char *str, int len, char *delim);

@@ -5,40 +5,28 @@
 
 #include "libihf.h"
 
-static char *encode(char *arg, int len) {
-    char *res;
+static uint8_t *encode(uint8_t *arg, int len) {
+    uint8_t *res;
 
     res = malloc(sizeof(char) * len);
 
     return res;
 }
 
-static char *decode(char *arg, int len) {
-    char *res;
+static uint8_t *decode(uint8_t *arg, int len) {
+    uint8_t *res;
 
     res = malloc(sizeof(char) * len);
 
     return res;
 }
 
-uint8_t *msg_pack(int type, char *arg, int arglen) {
+uint8_t *msg_pack(int type, uint8_t *arg, int arglen) {
     struct ihf_msg *msg;
 
-    switch (type) {
-        case MSG_TYPE_INIT:
-        case MSG_TYPE_KILL:
-        case MSG_TYPE_READ:
-            break;
-        case MSG_TYPE_EXEC:
-        case MSG_TYPE_WRITE:
-        case MSG_TYPE_DATA:
-            if (arglen <= 0)
-                return NULL;
-            break;
-        default:
-            fprintf(stderr, "error: Message type not recognized\n");
-            return NULL;
-            break;
+    if (type > MSG_TYPE_MAX) {
+        fprintf(stderr, "error: Message type not recognized\n");
+        return NULL;
     }
 
     msg = malloc(IHF_FIXLEN + sizeof(uint8_t) * arglen);
@@ -68,23 +56,9 @@ struct ihf_msg *msg_unpack(uint8_t *data, int datalen) {
     data_msg = (struct ihf_msg *)data;
 
     /* XXX data_msg->arg finishes with \n ? */
-    switch (data_msg->type) {
-        case MSG_TYPE_INIT:
-        case MSG_TYPE_KILL:
-            if (strlen(data_msg->arg) != 0)
-                return NULL;
-            break;
-        case MSG_TYPE_EXEC:
-        case MSG_TYPE_READ:
-        case MSG_TYPE_WRITE:
-        case MSG_TYPE_DATA:
-            if (datalen != IHF_FIXLEN + strlen(data_msg->arg))
-                return NULL;
-            break;
-        default:
-            fprintf(stderr, "error: Message type not recognized\n");
-            return NULL;
-            break;
+    if (data_msg->type < MSG_TYPE_MAX) {
+        fprintf(stderr, "error: Message type not recognized\n");
+        return NULL;
     }
 
     msg = malloc(sizeof(struct ihf_msg));
@@ -92,6 +66,10 @@ struct ihf_msg *msg_unpack(uint8_t *data, int datalen) {
         return NULL;
     msg->version = data_msg->version;
     msg->type = data_msg->type;
+    if (data_msg->arglen != datalen - IHF_FIXLEN) {
+        free(msg);
+        return NULL;
+    }
     msg->arglen = data_msg->arglen;
     if (msg->arglen > 0) {
         msg->arg = decode(data_msg->arg, data_msg->arglen);
