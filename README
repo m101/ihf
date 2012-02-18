@@ -1,1 +1,14 @@
 ihf - I Hate Firewalls - a remote shell via http polling
+
+This tools allows you to have a full bi-directionnal connection
+over state-less request based protocols like HTTP.
+
+It's composed of a client (cli) and a server (srv).
+For example you can have a setup where the client (cli) connects
+to a JSP servlet executing the server (srv).
+
+srv can execute commands on the server (for reverse shell).
+cli sends commands to srv over HTTP.
+
+In the future, srv is meant to be able to be used also as a proxy,
+and any protocol should be supported between cli and srv.
