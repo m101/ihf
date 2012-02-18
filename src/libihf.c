@@ -5,12 +5,80 @@
 
 #include "libihf.h"
 
-uint8_t          *msg_pack(int type, char *arg) {
+static char *encode(char *arg, int len) {
+  char *res;
 
+  res = malloc(sizeof(char) * len);
+
+  return res;
+}
+static char *decode(char *arg, int len) {
+  char *res;
+
+  res = malloc(sizeof(char) * len);
+
+  return res;
 }
 
-struct ihf_pkt_s *msg_unpack(uint8_t *data) {
+uint8_t *msg_pack(int type, char *arg) {
+  struct ihf_pkt_s *msg;
+  int arglen = 0;
 
+  switch (type) {
+    case MSG_TYPE_INIT:
+    case MSG_TYPE_KILL:
+      break;
+    case MSG_TYPE_EXEC:
+    case MSG_TYPE_READ:
+    case MSG_TYPE_WRITE:
+    case MSG_TYPE_DATA:
+      /* XXX arg finishes with \n ? */
+      arglen = strlen(arg);
+      if (arglen == 0)
+        return NULL;
+      break;
+  }
+  msg = malloc(IHF_FIXLEN + sizeof(uint8_t) * arglen);
+  msg->version = IHF_VERSION;
+  msg->type = type;
+  msg->arglen = arglen;
+  msg->arg = encode(arg, arglen);
+
+  return (uint8_t *)msg;
+}
+
+struct ihf_pkt_s *msg_unpack(uint8_t *data, int msglen) {
+  struct ihf_pkt_s *data_msg;
+  struct ihf_pkt_s *msg;
+
+  if (msglen < IHF_FIXLEN)
+    return NULL;
+    
+  data_msg = (struct ihf_pkt_s *)data;
+
+  /* XXX data_msg->arg finishes with \n ? */
+  switch (data_msg->type) {
+    case MSG_TYPE_INIT:
+    case MSG_TYPE_KILL:
+      if (strlen(data_msg->arg) != 0)
+        return NULL;
+      break;
+    case MSG_TYPE_EXEC:
+    case MSG_TYPE_READ:
+    case MSG_TYPE_WRITE:
+    case MSG_TYPE_DATA:
+      if (msglen != IHF_FIXLEN + strlen(data_msg->arg))
+        return NULL;
+      break;
+  }
+
+  msg = malloc(sizeof(struct ihf_pkt_s));
+  msg->version = data_msg->version;
+  msg->type = data_msg->type;
+  msg->arglen = data_msg->arglen;
+  msg->arg = decode(data_msg->arg, data_msg->arglen);
+
+  return msg;
 }
 
 // explode func
