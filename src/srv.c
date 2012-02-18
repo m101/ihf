@@ -13,6 +13,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include "libihf.h"
+
 #define FIFO_OUTPUT "/tmp/output"
 #define FIFO_INPUT  "/tmp/input"
 
@@ -25,9 +27,9 @@ int cmd_exec (struct ihf_pkt_s *pkt) {
         return -1;
 
     // parse packet
-    if (pkt->argn)
+    if (pkt->arg)
         return -1;
-    argv = exploded(pkt->argn, strlen(pkt->argn), " ");
+    argv = explode(pkt->arg, strlen(pkt->arg), " ");
     if (!argv)
         return -1;
 
@@ -60,18 +62,19 @@ int main (int argc, char *argv[]) {
     pid_t pid;
     // return code for each func
     int retcode;
+    struct stat buf;
 
-    // input pipe
-    fifo_input = open(FIFO_INTPUT, O_RDONLY);
-    if (fifo_input < 0) {
-        fprintf(stderr, "error: main(): Couldn't open(r) pipe file\n");
-        exit(1);
-    }
+    // verification that fifos exists first
+    if (stat(FIFO_INPUT, &buf) == 0)
+        unlink(FIFO_INPUT);
+    if (stat(FIFO_OUTPUT, &buf) == 0)
+        unlink(FIFO_OUTPUT);
 
-    // output pipe
-    fifo_output = open(FIFO_OUTPUT, O_WRONLY);
-    if (retcode < 0) {
-        fprintf(stderr, "error: main(): Couldn't open(w) pipe file\n");
+    // input or output pipe
+    fifo_input = mkfifo(FIFO_INPUT, O_RDONLY);
+    fifo_output = mkfifo(FIFO_OUTPUT, O_WRONLY);
+    if (fifo_input < 0 || fifo_output < 0) {
+        fprintf(stderr, "error: main(): Couldn't open(r|w) pipe file\n");
         exit(1);
     }
 
@@ -87,10 +90,8 @@ int main (int argc, char *argv[]) {
     else {
     }
 
-    /*
-    unlink("/tmp/input");
-    unlink("/tmp/output");
-    //*/
+    unlink(FIFO_INPUT);
+    unlink(FIFO_OUTPUT);
 
     return 0;
 }

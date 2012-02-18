@@ -1,18 +1,19 @@
-CFLAGS+=-Wall
-LDFLAGS=
+CFLAGS 	=	-g -Wall
+LDFLAGS	=
 
-all:
-	make srv
-	make cli
+all: srv cli
 
 cli:
 
-srv:
-	make lib
-	$(CC) srv.o lib.o -o srv $(LDFLAGS)
+%.o: %.c
+	$(CC) -o $@ -c $< $(CFLAGS) $(LDFLAGS)
 
-lib:
-	$(CC) libihf.c -o libihf.o
+srv: srv.o libihf.o
+	$(CC) srv.o libihf.o -o srv $(LDFLAGS) $(CFLAGS)
+
+.PHONY: clean mrproper
+
+mrproper: clean
 
 clean:
 	rm -f $(PROG) *~ *.o
