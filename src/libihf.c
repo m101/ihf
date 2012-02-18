@@ -81,28 +81,20 @@ struct ihf_pkt_s *msg_unpack(uint8_t *data, int msglen) {
   return msg;
 }
 
-// explode func
 char **explode (char *str, int len, char *delim) {
-    // strtok_r stuffs
     char *token, *saveptr;
-    // exploded str
     char *exploded;
-    //
     int idx_str, idx_delim;
     int len_str, len_delim;
 
-    // check params
     if (!str || len <= 0 || !delim)
         return NULL;
 
-    // alloc
     exploded = calloc(len, sizeof(*exploded));
     if (!exploded)
         return NULL;
-    // copy buf
     memcpy(exploded, str, len);
 
-    // exploded in token
     token = strtok_r(exploded, delim, &saveptr);
     while (token) {
         len_str = strlen(exploded);
