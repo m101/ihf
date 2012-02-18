@@ -24,18 +24,18 @@ static uint8_t *decode(uint8_t *arg, int len) {
 uint8_t *msg_pack(int type, uint8_t *arg, int arglen) {
     struct ihf_msg *msg;
 
-    if (type > MSG_TYPE_MAX) {
+    if (type >= MSG_TYPE_MAX) {
         fprintf(stderr, "error: Message type not recognized\n");
         return NULL;
     }
 
-    msg = malloc(IHF_FIXLEN + sizeof(uint8_t) * arglen);
+    msg = calloc(IHF_FIXLEN + sizeof(uint8_t) * arglen, sizeof(uint8_t));
     if (!msg)
         return NULL;
     msg->version = IHF_VERSION;
     msg->type = type;
-    msg->arglen = arglen;
-    if (msg->arglen > 0) {
+    if (arg && arglen > 0) {
+        msg->arglen = arglen;
         msg->arg = encode(arg, arglen);
         if (!msg->arg) {
             free(msg);
@@ -56,22 +56,21 @@ struct ihf_msg *msg_unpack(uint8_t *data, int datalen) {
     data_msg = (struct ihf_msg *)data;
 
     /* XXX data_msg->arg finishes with \n ? */
-    if (data_msg->type < MSG_TYPE_MAX) {
+    if (data_msg->type >= MSG_TYPE_MAX) {
         fprintf(stderr, "error: Message type not recognized\n");
         return NULL;
     }
+
+    if (data_msg->arglen != datalen - IHF_FIXLEN)
+        return NULL;
 
     msg = malloc(sizeof(struct ihf_msg));
     if (!msg)
         return NULL;
     msg->version = data_msg->version;
     msg->type = data_msg->type;
-    if (data_msg->arglen != datalen - IHF_FIXLEN) {
-        free(msg);
-        return NULL;
-    }
-    msg->arglen = data_msg->arglen;
-    if (msg->arglen > 0) {
+    if (arg && arglen > 0) {
+        msg->arglen = data_msg->arglen;
         msg->arg = decode(data_msg->arg, data_msg->arglen);
         if (!msg->arg) {
             free(msg);
