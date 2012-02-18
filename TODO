@@ -1,1 +1,8 @@
 little endian/bigendian
+
+error handling.
+in client, we want to log and fail ?
+in server, we want to log only 
+log_err()
+log_info()
+log_debug()
