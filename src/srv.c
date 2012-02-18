@@ -96,7 +96,36 @@ int cmd_write(struct ihf_msg_s *pkt) {
 }
 
 int main(int argc, char *argv[]) {
+    struct ihf_msg_s *msg;
     pid_t pid;
+    char buf[1024];
+    char *req = NULL;
+    int len = 0;
+    int l;
+
+    while (l = read(STDIN_FILENO, buf, 1024) > 0) {
+        len += l;
+        req = realloc(req, len);
+        if (!req) {
+            fprintf(stderr, "Error allocating receive buffer !\n");
+            return -1;
+        }
+        /* XXX limit size */
+    }
+
+    msg = msg_unpack(req, len);
+    switch (msg->type) {
+        case MSG_TYPE_INIT:
+            cmd_init();
+        case MSG_TYPE_KILL:
+            cmd_kill();
+        case MSG_TYPE_EXEC:
+            cmd_exec();
+        case MSG_TYPE_READ:
+            cmd_read();
+        case MSG_TYPE_WRITE:
+            cmd_write();
+    }
 
     pid = fork();
     /* parent */
