@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define IHF_FIXLEN 5
+#define IHF_FIXLEN  4
 #define IHF_VERSION 1
 
 struct ihf_msg {

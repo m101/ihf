@@ -1,4 +1,5 @@
 TARGET_SERVER = srv
+TARGET_CLIENT = cli
 CFLAGS 	=	-g -Wall
 LDFLAGS	=
 
@@ -17,5 +18,5 @@ $(TARGET_SERVER): srv.o libihf.o
 mrproper: clean
 
 clean:
-	rm -f $(TARGET_SERVER) *~ *.o
+	rm -f $(TARGET_SERVER) $(TARGET_CLIENT) *~ *.o
 
