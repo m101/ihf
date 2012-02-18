@@ -18,6 +18,44 @@ int usage(char *progname) {
     return 0;
 }
 
+// will return TRUE for an ip/host
+// will return FALSE otherwise
+int validate_ip(char *ip) {
+    long host;
+    char *end;
+    char integer[10];
+
+    host = strtol(ip, &end, 10);
+    if (host <= 0 || host > 255)
+        return 0;
+    snprintf(integer, 10, "%ld", host);
+
+    if (strcmp(ip, integer))
+        return 1;
+    else
+        return 0;
+}
+
+// will return TRUE for a port
+// will return FALSE otherwise
+int validate_port(char *port) {
+    long p;
+    char *end;
+    char integer[10];
+
+    p = strtol(port, &end, 10);
+    if (p <= 0 || p > 65535)
+        return 0;
+    snprintf(integer, 10, "%ld", p);
+
+    printf("%s passed first test\n", port);
+
+    if (strcmp(port, integer))
+        return 0;
+    else
+        return 1;
+}
+
 int main(int argc, char *argv[]) {
     int c;
     int flags = 0;
@@ -46,20 +84,29 @@ int main(int argc, char *argv[]) {
     if (flags & OPTION_VERBOSE)
         printf("verbose not implemented\n");
 
-    for (idx_arg = 0; idx_arg < argc; idx_arg++) {
+    for (idx_arg = 0; idx_arg < argc; idx_arg++)
         printf("arg[%d]: %s\n", idx_arg, argv[idx_arg]);
-        int retcode = sscanf(argv[idx_arg], "%d.%d.%d.%d", &port, &port, &port, &port);
-        printf("retcode: %d\n", retcode);
+    putchar('\n');
+
+    for (idx_arg = 0; idx_arg < argc; idx_arg++) {
+        if (validate_ip(argv[idx_arg]))
+            printf("%s is an ip/host address\n", argv[idx_arg]);
+        else {
+            if (validate_port(argv[idx_arg]))
+                printf("%s is a port\n", argv[idx_arg]);
+            else
+                printf("%s is not an ip/host address or port\n", argv[idx_arg]);
+        }
     }
 
-#define TEST_STR    "hahaha toto tata titi\n"
+#define TEST_STR    "arg0 arg1 arg2 arg3 arg4\n"
     char *toxplod = strdup(TEST_STR);
-    int nExploded;
-    char **exploded = explode(toxplod, strlen(toxplod), " ", &nExploded);
+    int n_exploded;
+    char **exploded = explode(toxplod, strlen(toxplod) + 1, " ", &n_exploded);
     int idx_exploded;
 
-    printf("nExploded: %d\n", nExploded);
-    for (idx_exploded = 0; idx_exploded < nExploded; idx_exploded++) {
+    printf("\nn_exploded: %d\n", n_exploded);
+    for (idx_exploded = 0; idx_exploded < n_exploded; idx_exploded++) {
         printf("exploded %d: %s\n", idx_exploded, exploded[idx_exploded]);
     }
 

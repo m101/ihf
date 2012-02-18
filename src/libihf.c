@@ -12,7 +12,7 @@
 static uint8_t *encode(uint8_t *arg, int len) {
     uint8_t *res;
 
-    res = malloc(sizeof(char) * len);
+    res = calloc(len, sizeof(char));
 
     return res;
 }
@@ -20,7 +20,7 @@ static uint8_t *encode(uint8_t *arg, int len) {
 static uint8_t *decode(uint8_t *arg, int len) {
     uint8_t *res;
 
-    res = malloc(sizeof(char) * len);
+    res = calloc(len, sizeof(char));
 
     return res;
 }
@@ -68,7 +68,7 @@ struct ihf_msg *msg_unpack(uint8_t *data, int datalen) {
     if (data_msg->arglen != datalen - IHF_FIXLEN)
         return NULL;
 
-    msg = malloc(sizeof(struct ihf_msg));
+    msg = calloc(1, sizeof(struct ihf_msg));
     if (!msg)
         return NULL;
     msg->version = data_msg->version;
@@ -141,7 +141,7 @@ int readall(int fd, char **req, int max) {
         if (l <= 0)
             break;
         len += l;
-        if (len > max) {
+        if (len >= max) {
             fprintf(stderr, "Buffer size too grows too big, cancelling");
             return -1;
         }
