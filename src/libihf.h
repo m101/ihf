@@ -6,7 +6,7 @@
 #define IHF_FIXLEN 5
 #define IHF_VERSION 1
 
-struct ihf_msg_s {
+struct ihf_msg {
     uint8_t version;
     uint8_t type;
     uint16_t arglen;
@@ -25,7 +25,7 @@ enum {
 };
 
 uint8_t          *msg_pack(int, char *, int);
-struct ihf_msg_s *msg_unpack(uint8_t *, int);
+struct ihf_msg *msg_unpack(uint8_t *, int);
 
 char **explode (char *str, int len, char *delim);
 

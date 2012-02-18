@@ -15,7 +15,7 @@
 #define FIFO_OUTPUT "/tmp/output"
 #define FIFO_INPUT  "/tmp/input"
 
-int cmd_init(struct ihf_msg_s *pkt) {
+int cmd_init(struct ihf_msg *pkt) {
     int fifo_input, fifo_output;
     int retcode;
     struct stat buf;
@@ -38,7 +38,7 @@ int cmd_kill(void) {
     unlink(FIFO_OUTPUT);
 }
 
-int cmd_exec(struct ihf_msg_s *pkt) {
+int cmd_exec(struct ihf_msg *pkt) {
     char **argv;
 
     if (!pkt)
@@ -53,7 +53,7 @@ int cmd_exec(struct ihf_msg_s *pkt) {
     execv(argv[0], argv);
 }
 
-int cmd_read(struct ihf_msg_s *pkt) {
+int cmd_read(struct ihf_msg *pkt) {
     int retcode;
     int c;
     char **argv;
@@ -74,7 +74,7 @@ int cmd_read(struct ihf_msg_s *pkt) {
     return 0;
 }
 
-int cmd_write(struct ihf_msg_s *pkt) {
+int cmd_write(struct ihf_msg *pkt) {
     int retcode;
     int c;
     char **argv;
@@ -96,7 +96,7 @@ int cmd_write(struct ihf_msg_s *pkt) {
 }
 
 int main(int argc, char *argv[]) {
-    struct ihf_msg_s *msg;
+    struct ihf_msg *msg;
     pid_t pid;
     char buf[1024];
     char *req = NULL;

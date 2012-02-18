@@ -22,7 +22,7 @@ static char *decode(char *arg, int len) {
 }
 
 uint8_t *msg_pack(int type, char *arg, int arglen) {
-  struct ihf_msg_s *msg;
+  struct ihf_msg *msg;
 
   switch (type) {
     case MSG_TYPE_INIT:
@@ -52,14 +52,14 @@ uint8_t *msg_pack(int type, char *arg, int arglen) {
   return (uint8_t *)msg;
 }
 
-struct ihf_msg_s *msg_unpack(uint8_t *data, int datalen) {
-  struct ihf_msg_s *data_msg;
-  struct ihf_msg_s *msg;
+struct ihf_msg *msg_unpack(uint8_t *data, int datalen) {
+  struct ihf_msg *data_msg;
+  struct ihf_msg *msg;
 
   if (datalen < IHF_FIXLEN)
     return NULL;
     
-  data_msg = (struct ihf_msg_s *)data;
+  data_msg = (struct ihf_msg *)data;
 
   /* XXX data_msg->arg finishes with \n ? */
   switch (data_msg->type) {
@@ -77,7 +77,7 @@ struct ihf_msg_s *msg_unpack(uint8_t *data, int datalen) {
       break;
   }
 
-  msg = malloc(sizeof(struct ihf_msg_s));
+  msg = malloc(sizeof(struct ihf_msg));
   if (!msg)
       return NULL;
   msg->version = data_msg->version;
