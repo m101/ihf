@@ -8,4 +8,6 @@ Coding norm
     -> idx_array and not idxArray
     -> for indexes: idx_
 - struct ihf_pkt_s *func() and not struct ihf_pkt_s* func()
+- no spaces between func name and parentheses:
+    -> void func() and not void func ()
 

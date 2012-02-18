@@ -21,38 +21,42 @@ static char *decode(char *arg, int len) {
   return res;
 }
 
-uint8_t *msg_pack(int type, char *arg) {
+uint8_t *msg_pack(int type, char *arg, int arglen) {
   struct ihf_msg_s *msg;
-  int arglen = 0;
 
   switch (type) {
     case MSG_TYPE_INIT:
     case MSG_TYPE_KILL:
+    case MSG_TYPE_READ:
       break;
     case MSG_TYPE_EXEC:
-    case MSG_TYPE_READ:
     case MSG_TYPE_WRITE:
     case MSG_TYPE_DATA:
-      /* XXX arg finishes with \n ? */
-      arglen = strlen(arg);
-      if (arglen == 0)
+      if (arglen <= 0)
         return NULL;
       break;
   }
+
   msg = malloc(IHF_FIXLEN + sizeof(uint8_t) * arglen);
+  if (!msg)
+      return NULL;
   msg->version = IHF_VERSION;
   msg->type = type;
   msg->arglen = arglen;
   msg->arg = encode(arg, arglen);
+  if (!msg->arg) {
+      free(msg);
+      return NULL;
+  }
 
   return (uint8_t *)msg;
 }
 
-struct ihf_msg_s *msg_unpack(uint8_t *data, int msglen) {
+struct ihf_msg_s *msg_unpack(uint8_t *data, int datalen) {
   struct ihf_msg_s *data_msg;
   struct ihf_msg_s *msg;
 
-  if (msglen < IHF_FIXLEN)
+  if (datalen < IHF_FIXLEN)
     return NULL;
     
   data_msg = (struct ihf_msg_s *)data;
@@ -68,16 +72,22 @@ struct ihf_msg_s *msg_unpack(uint8_t *data, int msglen) {
     case MSG_TYPE_READ:
     case MSG_TYPE_WRITE:
     case MSG_TYPE_DATA:
-      if (msglen != IHF_FIXLEN + strlen(data_msg->arg))
+      if (datalen != IHF_FIXLEN + strlen(data_msg->arg))
         return NULL;
       break;
   }
 
   msg = malloc(sizeof(struct ihf_msg_s));
+  if (!msg)
+      return NULL;
   msg->version = data_msg->version;
   msg->type = data_msg->type;
   msg->arglen = data_msg->arglen;
   msg->arg = decode(data_msg->arg, data_msg->arglen);
+  if (!msg->arg) {
+      free(msg);
+      return NULL;
+  }
 
   return msg;
 }
