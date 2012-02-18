@@ -117,7 +117,6 @@ char **explode (char *str, int len_str, char *delim, int *n_tokens) {
         free(to_explode);
         return NULL;
     }
-    memcpy(to_explode, str, len_str);
 
     // sep tokens
     *n_tokens = 0;
