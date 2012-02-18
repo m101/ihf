@@ -12,11 +12,12 @@ Data
 Types
   INIT
     ACK|ERR
-  KILL
+    No arguments
+  KILL : No arguments
     ACK|ERR
-  EXEC
+  EXEC : String like in a command line
     ACK+PID|ERR
-  READ
+  READ : No arguments
     DATA|ERR
-  WRITE
+  WRITE : Data
     ACK|ERR
