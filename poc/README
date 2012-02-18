@@ -1,7 +1,0 @@
-mknod input p
-mknod output p
-
-0<input 1>output sh
-
-echo ls > input
-cat output
