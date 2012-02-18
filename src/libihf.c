@@ -73,7 +73,7 @@ struct ihf_msg *msg_unpack(uint8_t *data, int datalen) {
         return NULL;
     msg->version = data_msg->version;
     msg->type = data_msg->type;
-    if (arg && arglen > 0) {
+    if (data_msg->arg && data_msg->arglen > 0) {
         msg->arglen = data_msg->arglen;
         msg->arg = decode(data_msg->arg, data_msg->arglen);
         if (!msg->arg) {
@@ -85,13 +85,13 @@ struct ihf_msg *msg_unpack(uint8_t *data, int datalen) {
     return msg;
 }
 
-char **explode (char *str, int len, char *delim) {
+char **explode (char *str, int len, char *delim, int *nTokens) {
     char *token, *saveptr;
     char *exploded;
     int idx_str, idx_delim;
     int len_str, len_delim;
 
-    if (!str || len <= 0 || !delim)
+    if (!str || len <= 0 || !delim || !nTokens)
         return NULL;
 
     exploded = calloc(len, sizeof(*exploded));
@@ -99,15 +99,18 @@ char **explode (char *str, int len, char *delim) {
         return NULL;
     memcpy(exploded, str, len);
 
+    *nTokens = 0;
+    len_delim = strlen(delim);
     token = strtok_r(exploded, delim, &saveptr);
     while (token) {
         len_str = strlen(exploded);
         for (idx_str = 0; idx_str < len_str; idx_str++) {
             // for each delim -> the byte is put to 0
-            len_delim = strlen(delim);
             for (idx_delim = 0; idx_delim < len_delim; idx_delim++) {
-                if (exploded[idx_str] == delim[idx_delim])
+                if (exploded[idx_str] == delim[idx_delim]) {
                     exploded[idx_str] = '\0';
+                    (*nTokens)++;
+                }
             }
         }
         token = strtok_r(NULL, delim, &saveptr);

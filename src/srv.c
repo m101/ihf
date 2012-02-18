@@ -40,11 +40,12 @@ int cmd_kill(void) {
 
 int cmd_exec(char *cmd, int cmd_len) {
     char **argv;
+    int argc;
 
     if (!cmd)
         return -1;
 
-    argv = explode(cmd, cmd_len, " ");
+    argv = explode(cmd, cmd_len, " ", &argc);
     if (!argv)
         return -1;
 

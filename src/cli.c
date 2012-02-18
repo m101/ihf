@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "libihf.h"
 
 #define OPTION_HELP     1
 #define OPTION_VERBOSE  2
-
-char **explode (char *str, int len, char *delim);
 
 int usage(char *progname) {
     if (!progname)
@@ -51,38 +50,16 @@ int main(int argc, char *argv[]) {
 
 #define TEST_STR    "hahaha toto tata titi\n"
     char *toxplod = strdup(TEST_STR);
-    char **exploded = explode(toxplod, strlen(toxplod), " ");
+    int lentoxplod = strlen(TEST_STR);
+    int nExploded;
+    char **exploded = explode(toxplod, strlen(toxplod), " ", &nExploded);
+    int idx_exploded;
+
+    printf("nExploded: %d\n", nExploded);
+    for (idx_exploded = 0; idx_exploded < nExploded; idx_exploded++) {
+        printf("exploded %d: %s\n", idx_exploded, exploded[idx_exploded]);
+    }
 
     return 0;
 }
 
-char **explode (char *str, int len, char *delim) {
-    char *token, *saveptr;
-    char *exploded;
-    int idx_str, idx_delim;
-    int len_str, len_delim;
-
-    if (!str || len <= 0 || !delim)
-        return NULL;
-
-    exploded = calloc(len, sizeof(*exploded));
-    if (!exploded)
-        return NULL;
-    memcpy(exploded, str, len);
-
-    token = strtok_r(exploded, delim, &saveptr);
-    while (token) {
-        len_str = strlen(exploded);
-        for (idx_str = 0; idx_str < len_str; idx_str++) {
-            // for each delim -> the byte is put to 0
-            len_delim = strlen(delim);
-            for (idx_delim = 0; idx_delim < len_delim; idx_delim++) {
-                if (exploded[idx_str] == delim[idx_delim])
-                    exploded[idx_str] = '\0';
-            }
-        }
-        token = strtok_r(NULL, delim, &saveptr);
-    }
-
-    return exploded;
-}
