@@ -3,6 +3,10 @@
 #include <string.h>
 #include <stdint.h>
 
+#include <unistd.h>
+#include <sys/select.h>
+#include <sys/types.h>
+
 #include "libihf.h"
 
 static uint8_t *encode(uint8_t *arg, int len) {
@@ -111,5 +115,30 @@ char **explode (char *str, int len, char *delim) {
     }
 
     return exploded;
+}
+
+int readall(int fd, char **req, int max) {
+    char buf[1024];
+    int len, l;
+
+    len = 0;
+    *req = NULL;
+    for(;;) {
+        l = read(STDIN_FILENO, buf, sizeof(buf));
+        if (l <= 0)
+            break;
+        len += l;
+        if (len > max) {
+            fprintf(stderr, "Buffer size too grows too big, cancelling");
+            return -1;
+        }
+        *req = realloc(*req, len);
+        if (!(*req)) {
+            fprintf(stderr, "Error allocating buffer !\n");
+            return -1;
+        }
+    }
+
+    return len;
 }
 

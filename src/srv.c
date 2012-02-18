@@ -44,8 +44,7 @@ int cmd_exec(char *cmd, int cmd_len) {
     if (!cmd)
         return -1;
 
-    /* XXX use cmd_len */
-    argv = explode(cmd, strlen(cmd), " ");
+    argv = explode(cmd, cmd_len, " ");
     if (!argv)
         return -1;
 
@@ -94,21 +93,10 @@ int cmd_write(char *data, int data_len) {
 
 int main(int argc, char *argv[]) {
     struct ihf_msg *msg;
-    pid_t pid;
-    char buf[1024];
-    char *req = NULL;
-    int len = 0;
-    int l;
+    char *req;
+    int len;
 
-    while (l = read(STDIN_FILENO, buf, 1024) > 0) {
-        len += l;
-        req = realloc(req, len);
-        if (!req) {
-            fprintf(stderr, "Error allocating receive buffer !\n");
-            return -1;
-        }
-        /* XXX limit size */
-    }
+    len = readall(STDIN_FILENO, &req, BUFMAX);
 
     msg = msg_unpack(req, len);
     switch (msg->type) {
@@ -122,17 +110,6 @@ int main(int argc, char *argv[]) {
             cmd_read();
         case MSG_TYPE_WRITE:
             cmd_write(msg->arg, msg->arglen);
-    }
-
-    pid = fork();
-    /* parent */
-    if (pid > 0) {
-    }
-    /* child */
-    else if (pid == 0) {
-    }
-    /* error */
-    else {
     }
 
     return 0;
