@@ -1,0 +1,22 @@
+The same protocol is used for requests and responses.
+
+Version
+  1 byte
+Type
+  2 bytes
+Lenght
+  2 bytes
+Data
+  N bytes
+
+Types
+  INIT
+    ACK|ERR
+  KILL
+    ACK|ERR
+  EXEC
+    ACK+PID|ERR
+  READ
+    DATA|ERR
+  WRITE
+    ACK|ERR
