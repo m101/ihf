@@ -40,6 +40,7 @@ int cmd_exec (struct ihf_pkt_s *pkt) {
 // get result
 int cmd_read (struct ihf_pkt_s *pkt) {
     int retcode;
+    int c;
     char **argv;
     FILE *fp;
 
@@ -61,6 +62,7 @@ int cmd_read (struct ihf_pkt_s *pkt) {
 // send data to input
 int cmd_write (struct ihf_pkt_s *pkt) {
     int retcode;
+    int c;
     char **argv;
     FILE *fp;
 
