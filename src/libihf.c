@@ -12,6 +12,7 @@ static char *encode(char *arg, int len) {
 
   return res;
 }
+
 static char *decode(char *arg, int len) {
   char *res;
 
