@@ -15,7 +15,7 @@
 #define FIFO_OUTPUT "/tmp/output"
 #define FIFO_INPUT  "/tmp/input"
 
-int cmd_init(struct ihf_msg *pkt) {
+int cmd_init(void) {
     int fifo_input, fifo_output;
     int retcode;
     struct stat buf;
@@ -38,29 +38,25 @@ int cmd_kill(void) {
     unlink(FIFO_OUTPUT);
 }
 
-int cmd_exec(struct ihf_msg *pkt) {
+int cmd_exec(char *cmd, int cmd_len) {
     char **argv;
 
-    if (!pkt)
-        return -1;
-    if (pkt->arg)
+    if (!cmd)
         return -1;
 
-    argv = explode(pkt->arg, strlen(pkt->arg), " ");
+    /* XXX use cmd_len */
+    argv = explode(cmd, strlen(cmd), " ");
     if (!argv)
         return -1;
 
     execv(argv[0], argv);
 }
 
-int cmd_read(struct ihf_msg *pkt) {
+int cmd_read(void) {
     int retcode;
     int c;
     char **argv;
     FILE *fp;
-
-    if (!pkt)
-        return -1;
 
     fp = open(FIFO_OUTPUT, "r");
     if (!fp)
@@ -74,15 +70,16 @@ int cmd_read(struct ihf_msg *pkt) {
     return 0;
 }
 
-int cmd_write(struct ihf_msg *pkt) {
+int cmd_write(char *data, int data_len) {
     int retcode;
     int c;
     char **argv;
     FILE *fp;
 
-    if (!pkt)
+    if (!data)
         return -1;
 
+    /* XXX use data_len */
     fp = open(FIFO_INPUT, "w");
     if (!fp)
         return -1;
@@ -120,11 +117,11 @@ int main(int argc, char *argv[]) {
         case MSG_TYPE_KILL:
             cmd_kill();
         case MSG_TYPE_EXEC:
-            cmd_exec();
+            cmd_exec(msg->arg, msg->arglen);
         case MSG_TYPE_READ:
             cmd_read();
         case MSG_TYPE_WRITE:
-            cmd_write();
+            cmd_write(msg->arg, msg->arglen);
     }
 
     pid = fork();
