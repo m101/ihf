@@ -4,4 +4,8 @@ Coding norm
 - all in lower caps
 - no typedef for complex types
     -> typedefs just for scalar types
+- for variables:
+    -> idx_array and not idxArray
+    -> for indexes: idx_
+- struct ihf_pkt_s *func() and not struct ihf_pkt_s* func()
 
