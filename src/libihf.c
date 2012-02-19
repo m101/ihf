@@ -143,7 +143,7 @@ int readall(int fd, char **req, int max) {
         if (l <= 0)
             break;
         len += l;
-        if (len >= max) {
+        if (len > max) {
             fprintf(stderr, "Buffer size too grows too big, cancelling");
             if (*req)
                 free(*req);
