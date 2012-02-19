@@ -134,6 +134,7 @@ char **explode (char *str, int len_str, char *delim, int *n_tokens) {
 
 /* read, and if the size is too big, cancel */
 /* XXX UNUSED. remove if we see that reading large chunks to pipes works */
+#define READSIZE 1024
 int readall(int fd, char **buf, int max) {
     int len, l;
     char *p;
@@ -189,6 +190,7 @@ int readtrunc(int fd, char **buf, int max) {
 }
 
 /* XXX UNUSED. remove if we see that writing large chunks to pipes works */
+#define WRITESIZE 1024
 int writeall(int fd, char *buf, int len) {
     char *p;
     int l;
