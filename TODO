@@ -6,3 +6,10 @@ in server, we want to log only
 log_err()
 log_info()
 log_debug()
+
+---- LATER ----
+
+decoding :
+in main(), read only the type of the request, and from there
+make a choice. if it's a write, then read all the lenght needed
+and pipe it directly to the process input FIFO without buffering
