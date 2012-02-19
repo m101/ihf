@@ -143,6 +143,8 @@ int readall(int fd, char **req, int max) {
         len += l;
         if (len >= max) {
             fprintf(stderr, "Buffer size too grows too big, cancelling");
+            if (*req)
+                free(*req)
             return -1;
         }
         *req = realloc(*req, len);
