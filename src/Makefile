@@ -1,6 +1,6 @@
 TARGET_SERVER = srv
 TARGET_CLIENT = cli
-CFLAGS 	=	-g -Wall
+CFLAGS 	=	-g -Wall -std=c99
 LDFLAGS	=
 
 all: $(TARGET_CLIENT) $(TARGET_SERVER)

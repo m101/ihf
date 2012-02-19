@@ -18,7 +18,7 @@ int usage(char *progname) {
     return 0;
 }
 
-// will return TRUE for an ip/host
+// will return TRUE for an ip
 // will return FALSE otherwise
 int validate_ip(char *ip) {
     long host;
@@ -95,17 +95,6 @@ int main(int argc, char *argv[]) {
             else
                 printf("%s is not an ip address or port\n", argv[idx_arg]);
         }
-    }
-
-#define TEST_STR    "arg0 arg1 arg2 arg3 arg4\n"
-    char *toxplod = strdup(TEST_STR);
-    int n_exploded;
-    char **exploded = explode(toxplod, strlen(toxplod) + 1, " ", &n_exploded);
-    int idx_exploded;
-
-    printf("\nn_exploded: %d\n", n_exploded);
-    for (idx_exploded = 0; idx_exploded < n_exploded; idx_exploded++) {
-        printf("exploded %d: %s\n", idx_exploded, exploded[idx_exploded]);
     }
 
     return 0;
