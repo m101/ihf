@@ -67,31 +67,44 @@ int cmd_read(void) {
     if (fd <= 0)
         return -1;
 
-    len = readtrunc(fd, &buf, BUFMAX);
-    msg = msg_pack(MSG_TYPE_DATA, buf, len);
-    if (!msg)
+    buf = malloc(sizeof(char) * BUFMAX);
+    if (!buf) {
+        fprintf(stderr, "Error allocating reading buffer !");
         return -1;
+    }
+    len = read(fd, &buf, BUFMAX);
+    msg = msg_pack(MSG_TYPE_DATA, buf, len);
+    if (!msg) {
+        free(buf);
+        return -1;
+    }
     while (write(STDOUT_FILENO, msg, 1024) > 0);
 
+    free(buf);
+    free(msg);
     close(fd);
 
     return 0;
 }
 
 int cmd_write(uint8_t *data, int data_len) {
-    int c;
+    int len;
     int fd;
 
     if (!data)
         return -1;
 
-    /* XXX use data_len */
     fd = open(FIFO_INPUT, O_WRONLY);
     if (fd <= 0)
         return -1;
 
-    while (read(STDIN_FILENO, &c, 1) > 0)
-        write(fd, &c, 1);
+    len = write(fd, data, data_len);
+    if (len <= 0) {
+        /* XXX send ERR */
+    }
+    else if (len < data_len) {
+        /* XXX send ERR with writen size ? */
+    }
 
     close(fd);
 
@@ -103,7 +116,12 @@ int main(int argc, char *argv[]) {
     char *req;
     int len;
 
-    len = readall(STDIN_FILENO, &req, BUFMAX);
+    req = malloc(sizeof(char) * BUFMAX);
+    if (!req) {
+        fprintf(stderr, "cannot allocate receiving request buffer !\n");
+        return -1;
+    }
+    len = read(STDIN_FILENO, *req, BUFMAX);
 
     msg = msg_unpack(req, len);
     switch (msg->type) {
@@ -118,6 +136,8 @@ int main(int argc, char *argv[]) {
         case MSG_TYPE_WRITE:
             cmd_write(msg->arg, msg->arglen);
     }
+
+    free(req);
 
     return 0;
 }
