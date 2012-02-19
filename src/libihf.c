@@ -12,7 +12,8 @@
 static uint8_t *encode(uint8_t *arg, int len) {
     uint8_t *res;
 
-    res = calloc(len, sizeof(char));
+    res = malloc(sizeof(uint8_t) * len);
+    memcpy(res, arg, len);
 
     return res;
 }
@@ -20,7 +21,8 @@ static uint8_t *encode(uint8_t *arg, int len) {
 static uint8_t *decode(uint8_t *arg, int len) {
     uint8_t *res;
 
-    res = calloc(len, sizeof(char));
+    res = malloc(sizeof(uint8_t) * len);
+    memcpy(res, arg, len);
 
     return res;
 }
@@ -144,7 +146,7 @@ int readall(int fd, char **req, int max) {
         if (len >= max) {
             fprintf(stderr, "Buffer size too grows too big, cancelling");
             if (*req)
-                free(*req)
+                free(*req);
             return -1;
         }
         *req = realloc(*req, len);
