@@ -19,5 +19,5 @@ $(TEST_B64): test_base64.o ../base64.o
 mrproper: clean
 
 clean:
-	rm -f $(TARGET_SERVER) $(TARGET_CLIENT) *~ *.o
+	rm -f $(TEST_EXPLODE) $(TEST_B64) *~ *.o
 

@@ -14,7 +14,7 @@ void print_array_uint8_t (uint8_t *array, int n_elements) {
         return;
 
     for (idx_array = 0; idx_array < n_elements; idx_array++)
-        printf("%08x ", array[idx_array]);
+        printf("%02x ", array[idx_array]);
     putchar('\n');
 }
 
@@ -38,21 +38,33 @@ int main(int argc, char *argv[]) {
         buf[idx_buf] = idx_buf;
     memcpy(buf + 256, TEST_STR, strlen(TEST_STR));
 
+    printf("printing array...\n");
     print_array_uint8_t (buf, sz_buf - 1);
 
+    printf("\nEncoding buffer ...\n");
     base64_encode_alloc(buf, sz_buf - 1, &b64_encoded);
     if (!b64_encoded) {
         fprintf(stderr, "error: Could not encode buffer\n");
         return -1;
     }
 
-    printf("encoded: %s\n", b64_encoded);
+    printf("encoded: %s\n\n", b64_encoded);
 
+    printf("Decoding buffer ...\n");
+    base64_decode_ctx_init (&dctx);
     base64_decode_alloc_ctx(&dctx,
             b64_encoded, strlen(b64_encoded),
             &b64_decoded, &len_decoded);
+    printf("len_decoded: %lu\n\n", len_decoded);
 
+    printf("printing array...\n");
     print_array_uint8_t (b64_decoded, len_decoded);
+
+    printf("comparing arrays...\n");
+    if (memcmp(buf, b64_decoded, len_decoded))
+        printf("Decoding failed\n");
+    else
+        printf("Decoding succeeded\n");
 
     return 0;
 }
