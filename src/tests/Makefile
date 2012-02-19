@@ -1,9 +1,9 @@
 TEST_EXPLODE = test_explode
-TEST_B64 = test_b64
+TEST_B64 = test_base64
 CFLAGS 	=	-g -Wall -std=c99
 LDFLAGS	=
 
-all: $(TEST_EXPLODE)
+all: $(TEST_EXPLODE) $(TEST_B64)
 
 %.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(LDFLAGS) -I../

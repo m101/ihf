@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "base64.h"
 
@@ -13,7 +14,7 @@ void print_array_uint8_t (uint8_t *array, int n_elements) {
         return;
 
     for (idx_array = 0; idx_array < n_elements; idx_array++)
-        printf("%08x ", array[idx_array])
+        printf("%08x ", array[idx_array]);
     putchar('\n');
 }
 
@@ -23,7 +24,7 @@ int main(int argc, char *argv[]) {
     // b64
     struct base64_decode_context dctx;
     char *b64_encoded, *b64_decoded;
-    int len_decoded;
+    size_t len_decoded;
 
     sz_buf = 256 + strlen(TEST_STR) + 1;
 
