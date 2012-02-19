@@ -103,7 +103,7 @@ char **explode (char *str, int len_str, char *delim, int *n_tokens) {
         return NULL;
     memcpy(to_explode, str, len_str);
 
-    // count n_tokens
+    /* count n_tokens */
     len_delim = strlen(delim);
     c_tokens = 1;
     for (idx_str = 0; idx_str < len_str; idx_str++) {
@@ -113,14 +113,14 @@ char **explode (char *str, int len_str, char *delim, int *n_tokens) {
         }
     }
 
-    // copy str (strdup() does not seem to be reliable)
+    /* copy str (strdup() does not seem to be reliable) */
     exploded = calloc(c_tokens, sizeof(*exploded));
     if (!to_explode) {
         free(to_explode);
         return NULL;
     }
 
-    // sep tokens
+    /* sep tokens */
     *n_tokens = 0;
     token = strtok_r(to_explode, delim, &saveptr);
     while (token) {

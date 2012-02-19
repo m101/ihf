@@ -18,8 +18,8 @@ int usage(char *progname) {
     return 0;
 }
 
-// will return TRUE for an ip
-// will return FALSE otherwise
+/* will return TRUE for an ip
+   will return FALSE otherwise */
 int validate_ip(char *ip) {
     long host;
     char *end;
@@ -36,8 +36,8 @@ int validate_ip(char *ip) {
         return 0;
 }
 
-// will return TRUE for a port
-// will return FALSE otherwise
+/* will return TRUE for a port
+   will return FALSE otherwise */
 int validate_port(char *port) {
     long p;
     char *end;
