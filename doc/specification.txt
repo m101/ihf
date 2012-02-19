@@ -76,10 +76,10 @@ Its goal would be to permit us to have an interactive shell.
             | -----------        |
             ----------------------
 
-4 - Sessions
+4 - Thread safety / Sessions
 
 Multiple clients have to be taken into account in the implementation as
-otherwise we will have corruption and other problems.
+otherwise there will have corruption and other problems.
 The solution for the software to be thread-safe would be the usage of
 sessions.
 
@@ -88,11 +88,14 @@ that the session handling will have to be implemented in the software.
 
 There is a second approach where the server part use JSESSID or PHPSESSID
 to generate a hash of 64-bits (at least) which would serve as a prefix.
+The advantage of this approach is that the session management will mostly be
+done by the JSP server and a part on the client (which would keep the JSESSID
+as it is done on web browsers).
 
 Since multiple files will be created, a TTL (Time To Live) in seconds
 on the last accessed date would need to be specified in order to clean the
 fifos correctly.
 
-Moreover, hashing the ip+port would not work since port srcport change for
-each connection. IP hashing would not work in case where multiple clients
-share the same connection (and thus have the same IP).
+Moreover, hashing the ip+port would not work since srcport change for each
+connection. IP hashing would not work in the case where multiple clients share
+the same connection (and thus have the same IP).
