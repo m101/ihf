@@ -15,7 +15,7 @@ Its goal would be to permit us to have an interactive shell.
 - Server (srv)
     - pipe
 
-3 - Architecture
+3 - Server architecture
 
 (1) deamonized
 
@@ -76,7 +76,22 @@ Its goal would be to permit us to have an interactive shell.
             | -----------        |
             ----------------------
 
-4 - Thread safety / Sessions
+We choose solution 3.
+IHF is "C code" is the schema.
+
+4 - Client architecture
+
+protocol agnostic, like the server.
+    needs to be piped to some program that will encapsulate the raw data
+    in some protocol (adding HTTP headers for example)
+shell mode (default) : ./cli host port cmd
+    sends MSG_TYPE_INIT and MSG_TYPE_EXEC on startup
+    waits for user input and sends MSG_TYPE_READ every 1s (or -r readtime)
+    if there are characters entered by user, send MSG_TYPE_WRITE every 1s (or -w writetime)
+    on exit, sends MSG_TYPE_KILL
+example for remote shell : ./cli 192.168.1.1 80 /bin/sh
+
+5 - Thread safety / Sessions
 
 Multiple clients have to be taken into account in the implementation as
 otherwise there will have corruption and other problems.
