@@ -192,7 +192,6 @@ int readtrunc(int fd, char **buf, int max) {
 int writeall(int fd, char *buf, int max) {
     int len, l;
     char *p;
-    int l;
 
     p = buf;
     for (;;) {
