@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define BUFMAX 1024 * 10
+#define READSIZE 1024
 
 #define IHF_FIXLEN  4
 #define IHF_VERSION 1
