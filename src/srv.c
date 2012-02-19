@@ -67,7 +67,7 @@ int cmd_read(void) {
     if (fd <= 0)
         return -1;
 
-    len = readall(fd, &buf, BUFMAX);
+    len = readtrunc(fd, &buf, BUFMAX);
     msg = msg_pack(MSG_TYPE_DATA, buf, len);
     if (!msg)
         return -1;
