@@ -133,25 +133,25 @@ char **explode (char *str, int len_str, char *delim, int *n_tokens) {
 }
 
 /* read, and if the size is too big, cancel */
-int readall(int fd, char **req, int max) {
+int readall(int fd, char **buf, int max) {
     int len, l;
     char *p;
 
     len = 0;
-    *req = NULL;
+    *buf = NULL;
     for(;;) {
-        *req = realloc(*req, len + READSIZE);
-        if (!(*req)) {
+        *buf = realloc(*buf, len + READSIZE);
+        if (!(*buf)) {
             fprintf(stderr, "Error allocating buffer !\n");
             return -1;
         }
-        p = *req + len;
+        p = *buf + len;
         l = read(STDIN_FILENO, p, READSIZE);
         if (l <= 0)
             break;
         if (len + l > max) {
             fprintf(stderr, "Buffer size grows too big, cancelling !");
-            free(*req);
+            free(*buf);
             return -1;
         }
         len += l;
@@ -161,19 +161,19 @@ int readall(int fd, char **req, int max) {
 }
 
 /* read until a maximum size is reached, and then truncate */
-int readtrunc(int fd, char **req, int max) {
+int readtrunc(int fd, char **buf, int max) {
     int len, l;
     char *p;
 
     len = 0;
-    *req = NULL;
+    *buf = NULL;
     for(;;) {
-        *req = realloc(*req, len + READSIZE);
-        if (!(*req)) {
+        *buf = realloc(*buf, len + READSIZE);
+        if (!(*buf)) {
             fprintf(stderr, "Error allocating buffer !\n");
             return -1;
         }
-        p = *req + len;
+        p = *buf + len;
         l = read(STDIN_FILENO, p, READSIZE);
         if (l <= 0 || len + l > max)
             break;
