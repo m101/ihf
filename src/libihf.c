@@ -133,6 +133,7 @@ char **explode (char *str, int len_str, char *delim, int *n_tokens) {
 }
 
 /* read, and if the size is too big, cancel */
+/* XXX UNUSED. remove if we see that reading large chunks to pipes works */
 int readall(int fd, char **buf, int max) {
     int len, l;
     char *p;
@@ -150,7 +151,7 @@ int readall(int fd, char **buf, int max) {
         if (l <= 0)
             break;
         if (len + l > max) {
-            fprintf(stderr, "Buffer size grows too big, cancelling !");
+            fprintf(stderr, "Buffer size grows too big, cancelling !\n");
             free(*buf);
             return -1;
         }
@@ -161,8 +162,10 @@ int readall(int fd, char **buf, int max) {
 }
 
 /* read until a maximum size is reached, and then truncate */
+/* XXX UNUSED. remove if we see that reading large chunks to pipes works */
 int readtrunc(int fd, char **buf, int max) {
     int len, l;
+    int readsize;
     char *p;
 
     len = 0;
@@ -174,7 +177,9 @@ int readtrunc(int fd, char **buf, int max) {
             return -1;
         }
         p = *buf + len;
+        readsize = READSIZE - (max - len);
         l = read(STDIN_FILENO, p, READSIZE);
+        /* XXX buggy: we are going to loose last read if we break on len + l > max */
         if (l <= 0 || len + l > max)
             break;
         len += l;
@@ -183,16 +188,18 @@ int readtrunc(int fd, char **buf, int max) {
     return len;
 }
 
+/* XXX UNUSED. remove if we see that writing large chunks to pipes works */
 int writeall(int fd, char *buf, int len) {
     char *p;
+    int l;
 
     p = buf;
     for (;;) {
-        len = write(fd, p, WRITESIZE);
-        if (len <= 0)
+        l = write(fd, p, WRITESIZE);
+        if (l <= 0)
             return -1;
-        p += len;
-        if (p >= data_len)
+        p += l;
+        if ((p - buf) >= len)
             return 0;
     }
 
