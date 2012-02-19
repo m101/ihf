@@ -58,9 +58,8 @@ int cmd_exec(uint8_t *cmd, int cmd_len) {
 }
 
 int cmd_read(void) {
-    struct ihf_msg *msg;
+    uint8_t *buf, *msg;
     int fd;
-    char *buf;
     int len;
 
     fd = open(FIFO_OUTPUT, O_RDONLY);
@@ -79,12 +78,12 @@ int cmd_read(void) {
         return -1;
     }
 
-    len = write(STDOUT_FILENO, msg, IHF_FIXLEN + msg->arglen);
+    len = write(STDOUT_FILENO, msg, IHF_FIXLEN + len);
     if (len <= 0) {
         /* XXX handle error */
         return -1;
     }
-    else if (len < IHF_FIXLEN + msg->arglen) {
+    else if (len < IHF_FIXLEN + len) {
         /* XXX handle error */
     }
 
@@ -121,33 +120,53 @@ int cmd_write(uint8_t *data, int data_len) {
 }
 
 int main(int argc, char *argv[]) {
-    struct ihf_msg *msg;
-    char *req;
+    struct ihf_msg *msg = NULL;
+    uint8_t *req = NULL;
+    int ret = 0;
     int len;
 
     req = malloc(sizeof(char) * BUFMAX);
     if (!req) {
         fprintf(stderr, "cannot allocate receiving request buffer !\n");
-        return -1;
+        ret = -1;
+        goto exit;
     }
-    len = read(STDIN_FILENO, *req, BUFMAX);
+    len = read(STDIN_FILENO, req, BUFMAX);
 
     msg = msg_unpack(req, len);
+    if (!msg) {
+        fprintf(stderr, "error unpacking message\n");
+        ret = -1;
+        goto exit;
+    }
     switch (msg->type) {
         case MSG_TYPE_INIT:
             cmd_init();
+            break;
         case MSG_TYPE_KILL:
             cmd_kill();
+            break;
         case MSG_TYPE_EXEC:
             cmd_exec(msg->arg, msg->arglen);
+            break;
         case MSG_TYPE_READ:
             cmd_read();
+            break;
         case MSG_TYPE_WRITE:
             cmd_write(msg->arg, msg->arglen);
+            break;
+        default:
+            fprintf(stderr, "unknown request type %d\n", msg->type);
+            ret = -1;
+            goto exit;
     }
 
-    free(req);
+exit:
+    if (req)
+        free(req);
+    if (msg)
+        free(msg);
 
-    return 0;
+    return ret;
 }
 
