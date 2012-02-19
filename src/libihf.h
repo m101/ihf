@@ -34,6 +34,4 @@ struct ihf_msg *msg_unpack(uint8_t *, int);
 
 char **explode (char *, int, char *, int *);
 
-int readall(int, char **, int);
-
 #endif /* _LIBIHF_H_ */
