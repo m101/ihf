@@ -78,7 +78,15 @@ int cmd_read(void) {
         free(buf);
         return -1;
     }
-    while (write(STDOUT_FILENO, msg, 1024) > 0);
+
+    len = write(STDOUT_FILENO, msg, IHF_FIXLEN + msg->arglen);
+    if (len <= 0) {
+        /* XXX handle error */
+        return -1;
+    }
+    else if (len < IHF_FIXLEN + msg->arglen) {
+        /* XXX handle error */
+    }
 
     free(buf);
     free(msg);
