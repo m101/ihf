@@ -183,3 +183,20 @@ int readtrunc(int fd, char **buf, int max) {
     return len;
 }
 
+int writeall(int fd, char *buf, int len) {
+    char *p;
+
+    p = buf;
+    for (;;) {
+        len = write(fd, p, WRITESIZE);
+        if (len <= 0)
+            return -1;
+        p += len;
+        if (p >= data_len)
+            return 0;
+    }
+
+    /* UNREACHED */
+    return 0;
+}
+
