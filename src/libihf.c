@@ -183,7 +183,8 @@ int readtrunc(int fd, char **buf, int max) {
     return len;
 }
 
-int writeall(int fd, char *buf, int len) {
+int writeall(int fd, char *buf, int max) {
+    int len, l;
     char *p;
 
     p = buf;
@@ -192,7 +193,8 @@ int writeall(int fd, char *buf, int len) {
         if (len <= 0)
             return -1;
         p += len;
-        if (p >= data_len)
+        l += len;
+        if (l >= max)
             return 0;
     }
 
