@@ -1,5 +1,12 @@
 ihf - I Hate Firewalls - a remote shell via http polling
 
+----
+2012-02-19
+This tool is under heavy development, and not functionnal yet
+The follwing README is here to present the first goal that we
+want to achieve
+----
+
 This tools allows you to have a full bi-directionnal connection
 over state-less request based protocols like HTTP.
 
