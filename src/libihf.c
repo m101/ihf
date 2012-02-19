@@ -134,27 +134,27 @@ char **explode (char *str, int len_str, char *delim, int *n_tokens) {
 
 /* read, and if the size is too big, cancel */
 int readall(int fd, char **req, int max) {
-    char buf[1024];
     int len, l;
+    char *p;
 
     len = 0;
     *req = NULL;
     for(;;) {
-        l = read(STDIN_FILENO, buf, sizeof(buf));
-        if (l <= 0)
-            break;
-        len += l;
-        if (len > max) {
-            fprintf(stderr, "Buffer size too grows too big, cancelling");
-            if (*req)
-                free(*req);
-            return -1;
-        }
-        *req = realloc(*req, len);
+        *req = realloc(*req, len + READSIZE);
         if (!(*req)) {
             fprintf(stderr, "Error allocating buffer !\n");
             return -1;
         }
+        p = *req + len;
+        l = read(STDIN_FILENO, p, READSIZE);
+        if (l <= 0)
+            break;
+        if (len + l > max) {
+            fprintf(stderr, "Buffer size grows too big, cancelling !");
+            free(*req);
+            return -1;
+        }
+        len += l;
     }
 
     return len;
