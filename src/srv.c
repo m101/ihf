@@ -101,6 +101,7 @@ int cmd_write(uint8_t *data, int data_len) {
     len = write(fd, data, data_len);
     if (len <= 0) {
         /* XXX send ERR */
+        return -1;
     }
     else if (len < data_len) {
         /* XXX send ERR with writen size ? */
@@ -108,7 +109,7 @@ int cmd_write(uint8_t *data, int data_len) {
 
     close(fd);
 
-    return 0;
+    return len;
 }
 
 int main(int argc, char *argv[]) {
