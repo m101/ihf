@@ -30,7 +30,7 @@ static uint8_t *decode(uint8_t *arg, int len) {
 uint8_t *msg_pack(int type, uint8_t *arg, int arglen) {
     struct ihf_msg *msg;
 
-    if (type >= MSG_TYPE_MAX) {
+    if (type > MSG_TYPE_MAX) {
         fprintf(stderr, "error: Message type not recognized\n");
         return NULL;
     }
@@ -62,7 +62,7 @@ struct ihf_msg *msg_unpack(uint8_t *data, int datalen) {
     data_msg = (struct ihf_msg *)data;
 
     /* XXX data_msg->arg finishes with \n ? */
-    if (data_msg->type >= MSG_TYPE_MAX) {
+    if (data_msg->type > MSG_TYPE_MAX) {
         fprintf(stderr, "error: Message type not recognized\n");
         return NULL;
     }
