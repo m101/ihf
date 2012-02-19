@@ -193,14 +193,15 @@ int writeall(int fd, char *buf, int max) {
     int len, l;
     char *p;
 
+    len = 0;
     p = buf;
     for (;;) {
         l = write(fd, p, WRITESIZE);
         if (l <= 0)
             return -1;
         p += len;
-        l += len;
-        if (l >= max)
+        len += l;
+        if (len >= max)
             return 0;
     }
 
