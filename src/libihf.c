@@ -56,7 +56,7 @@ struct ihf_msg *msg_unpack(uint8_t *data, int datalen) {
     struct ihf_msg *data_msg;
     struct ihf_msg *msg;
 
-    if (datalen < IHF_FIXLEN)
+    if (!data || datalen < IHF_FIXLEN)
         return NULL;
 
     data_msg = (struct ihf_msg *)data;
