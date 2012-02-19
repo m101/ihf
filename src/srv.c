@@ -58,15 +58,20 @@ int cmd_exec(uint8_t *cmd, int cmd_len) {
 }
 
 int cmd_read(void) {
-    int c;
+    struct ihf_msg *msg;
     int fd;
+    char *buf;
+    int len;
 
     fd = open(FIFO_OUTPUT, O_RDONLY);
     if (fd <= 0)
         return -1;
 
-    while (read(fd, &c, 1) > 0)
-        write(STDOUT_FILENO, &c, 1);
+    len = readall(fd, &buf, BUFMAX);
+    msg = msg_pack(MSG_TYPE_DATA, buf, len);
+    if (!msg)
+        return -1;
+    while (write(STDOUT_FILENO, msg, 1024) > 0);
 
     close(fd);
 
