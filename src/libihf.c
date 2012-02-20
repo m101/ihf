@@ -9,6 +9,12 @@
 
 #include "libihf.h"
 
+/* XXX
+ * we should inspire from netcat
+ * http://www.openbsd.org/cgi-bin/cvsweb/src/usr.bin/nc/
+ * see readwrite(), atomicio()
+ */
+
 static uint8_t *encode(uint8_t *arg, int len) {
     uint8_t *res;
 

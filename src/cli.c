@@ -12,6 +12,12 @@
 
 extern char *__progname;
 
+/* XXX
+ * we should inspire from netcat
+ * http://www.openbsd.org/cgi-bin/cvsweb/src/usr.bin/nc/
+ * see readwrite(), atomicio()
+ */
+
 int usage() {
     printf("Usage: %s [h|v] host port command\n", __progname);
 
