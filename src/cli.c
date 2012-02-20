@@ -7,9 +7,6 @@
 
 #include "libihf.h"
 
-#define OPTION_HELP     1
-#define OPTION_VERBOSE  2
-
 extern char *__progname;
 
 /* XXX
@@ -38,6 +35,8 @@ int main(int argc, char *argv[]) {
             case 'v':
                 verbose = 1;
                 break;
+            default:
+                usage();
         }
     }
 
