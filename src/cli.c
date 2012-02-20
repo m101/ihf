@@ -16,7 +16,7 @@ extern char *__progname;
  */
 
 int usage() {
-    printf("Usage: %s [h|v] host port command\n", __progname);
+    printf("Usage: %s [-hv] host port command\n", __progname);
 
     exit(1);
 }
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
     host = argv[0];
     port = atoi(argv[1]);
     cmd = argv[2];
-    if (!host || port < 0 || !cmd )
+    if (!host || port < 0 || !cmd)
         usage();
     
     if (verbose)
