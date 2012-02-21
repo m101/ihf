@@ -19,6 +19,8 @@
 #ifndef BASE64_H
 # define BASE64_H
 
+#include "config.h"
+
 /* Get size_t. */
 # include <stddef.h>
 
