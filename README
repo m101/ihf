@@ -19,3 +19,11 @@ cli sends commands to srv over HTTP.
 
 In the future, srv is meant to be able to be used also as a proxy,
 and any protocol should be supported between cli and srv.
+
+
+SEE ALSO
+
+python cgi shell, using pexpect
+    http://develop.quantumempire.com/browser/trunk/Python/pexpect/examples/cgishell.cgi?rev=4
+http tunnel
+    http://www.nocrew.org/software/httptunnel.html
